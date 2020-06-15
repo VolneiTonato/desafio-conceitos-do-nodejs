@@ -1,33 +1,21 @@
 const express = require("express");
-const cors = require("cors");
+const cors = require("cors")
+const routes = require("./routes")
 
-// const { uuid } = require("uuidv4");
+const app = express()
 
-const app = express();
+app.use(express.json())
+app.use(cors())
 
-app.use(express.json());
-app.use(cors());
+for (let router of routes) 
+  app.use(router.route, router.router)
 
-const repositories = [];
 
-app.get("/repositories", (request, response) => {
-  // TODO
-});
 
-app.post("/repositories", (request, response) => {
-  // TODO
-});
+app.use((err, request, response, next) => {
+  const status = err.status || 500
+  const message = err.message || 'Erro interno no servidor'
+  return response.status(status).send({ message: message })
+})
 
-app.put("/repositories/:id", (request, response) => {
-  // TODO
-});
-
-app.delete("/repositories/:id", (request, response) => {
-  // TODO
-});
-
-app.post("/repositories/:id/like", (request, response) => {
-  // TODO
-});
-
-module.exports = app;
+module.exports = app
